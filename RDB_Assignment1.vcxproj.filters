@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.c">
+    <ClCompile Include="InventoryMgmtSys.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RandomAccess.c">
@@ -27,5 +27,10 @@
     <ClCompile Include="DelimitedFile.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="InventoryMgmtSys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

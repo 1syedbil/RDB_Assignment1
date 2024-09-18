@@ -47,7 +47,7 @@ void rndAccessReadRec(char fileName[STRING_LEN], int id);
 
 void rndAccessUpdtRec(char fileName[STRING_LEN], int id, int newVal); 
 
-int calculateOffset(int id);
+long calculateOffset(int id); 
 
 //Sequential Access
 /*

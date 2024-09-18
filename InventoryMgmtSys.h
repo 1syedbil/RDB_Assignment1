@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 //THIS FILE IS WHERE ALL OF THE FUNCTION PROTOTYPES WILL GO 
 

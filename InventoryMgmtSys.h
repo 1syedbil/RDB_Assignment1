@@ -45,9 +45,15 @@ void rndAccessCreateRec(int id, int quant, double price, char name[STRING_LEN], 
 
 void rndAccessReadRec(char fileName[STRING_LEN], int id); 
 
-void rndAccessUpdtRec(char fileName[STRING_LEN], int id, int newVal); 
+void rndAccessUpdtRec(char fileName[STRING_LEN], int id, double newVal); 
 
-long calculateOffset(int id); 
+void rndAccessDltRec(char fileName[STRING_LEN], int id); 
+
+long calculateOffset(char fileName[STRING_LEN], int id);
+
+void displayAllRecs(char fileName[STRING_LEN]); 
+
+bool checkRecExists(char fileName[STRING_LEN], int id); 
 
 //Sequential Access
 /*

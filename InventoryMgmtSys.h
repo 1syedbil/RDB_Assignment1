@@ -28,7 +28,7 @@
 */
 
 //Sequential Access
-/*
+
 
 
 
@@ -49,7 +49,7 @@ void UpdateProduct(struct Product products[], int times);
 void DeleteProduct(struct Product products[], int* times);
 void DisplayProducts(struct Product products[], int times);
 
-*/
+
 
 //Delimited File
 /*

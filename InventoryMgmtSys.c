@@ -2,54 +2,228 @@
 
 int main(void)
 {
-	/*GENERAL LAYOOUT OF MAIN:
-	* 
-	- menu showing options for which kind of file 
-	the user can perform the CRUD operations on
+	char fileName[STRING_LEN] = "../inventory.bin";
+	char userInput[STRING_LEN] = "";
+	int id = 0;
+	char newName[STRING_LEN] = "";
+	char newCategory[STRING_LEN] = "";
+	int newQuant = 0;
+	double newPrice = 0;
+	int menuChoice = 0;
 
-	- get user input for their choice from the menu
+	while (menuChoice != 4)
+	{
+		printf("Select an option for file access:\n\n\t1. Sequential Access\t2. Random Access\t3. Delimited File Access\t4. Exit\n\nEnter a number corresponding with the option you want to select: ");
+		strcpy(userInput, getUserInput(userInput));
+		printf("\n\n");
+		menuChoice = atoi(userInput);
+		if (menuChoice == 0)
+		{
+			printf("Invalid menu selection, must enter a number option showing on the menu.\n\n");
+			continue;
+		}
+		strcpy(userInput, "");
 
-	- use switch-case statement for the different menu options 
-	that the user can choose
+		switch (menuChoice)
+		{
+		case 1:
+			printf("Select a CRUD operation you want to perform:\n\n\t1.Create Record\t2. Read Record\t3. Update Record\t4. Delete Record\n\nEnter a number corresponding with the option you want to select: ");
+			strcpy(userInput, getUserInput(userInput));
+			printf("\n\n");
+			menuChoice = atoi(userInput);
+			if (menuChoice == 0)
+			{
+				printf("Invalid menu selection, must enter a number option showing on the menu.\n\n");
+				continue;
+			}
+			strcpy(userInput, "");
 
-	- they have three options: 1. random accsess, 2. sequential access, 3. delimited file
-	
-	- once they make a selection another menu will show up. It will have 4 different options for CRUD.
-	the same CRUD menu will show up no matter which file type is chosen
-	
-	- another switch-case statement for the CRUD menu options
-	
-	- this is where the CRUD functions will be called. each file type will have its own dedicated CRUD functions. 
-	create function, read function, update function, and delete function for each respective file type.
-	this means that each file type will have, at minimum, 4 different functions
-	
-	- for create and update let the user input what new values they want to add. for delete let them decide which entry 
-	they would like to delete.
-	*
-	*/
-	/*rndAccessCreateRec(1, 50, 699.99, "Smartphone", "Electronics", "../inventory.bin");        
-	rndAccessCreateRec(2, 30, 999.99, "Laptop", "Electronics", "../inventory.bin");         
-	rndAccessCreateRec(3, 20, 299.99, "Tablet", "Electronics", "../inventory.bin");         
-	rndAccessCreateRec(4, 10, 599.99, "Television", "Electronics", "../inventory.bin"); 
 
-	displayAllRecs("../inventory.bin");*/ 
+			menuChoice = 0;
+			strcpy(userInput, "");
+			break;
 
-	/*rndAccessDltRec("../inventory.bin", 2);  
-	displayAllRecs("../inventory.bin");*/   
+		case 2:
+			while (menuChoice != 5)
+			{
+				printf("Select a CRUD operation you want to perform:\n\n\t1.Create Record\t2. Read Record\t3. Update Record\t4. Delete Record\t5. Back\n\nEnter a number corresponding with the option you want to select: ");
+				strcpy(userInput, getUserInput(userInput));
+				printf("\n\n");
+				menuChoice = atoi(userInput);
+				if (menuChoice == 0)
+				{
+					printf("Invalid menu selection, must enter a number option showing on the menu.\n\n");
+					continue;
+				}
+				strcpy(userInput, "");
 
-	/*rndAccessReadRec("../inventory.bin", 1);     
-	printf("\n");
-	rndAccessReadRec("../inventory.bin", 2);   
-	printf("\n");
-	rndAccessReadRec("../inventory.bin", 3);  
-	printf("\n"); 
-	rndAccessReadRec("../inventory.bin", 4); 
-	printf("\n");
+				switch (menuChoice)
+				{
+				case 1:
+					printf("Enter a value for ProductId (this is the primary key): ");
+					strcpy(userInput, getUserInput(userInput));
+					id = atoi(userInput);
+					if (id == 0)
+					{
+						printf("Invalid ProductId value, must enter a positive and non-zero integer.\n\n");
+						continue;
+					}
+					if (checkRecExists(fileName, id) != -1)
+					{
+						printf("A record with this ProductId already exists. No duplicated IDs allowed.\n\n");
+						continue;
+					}
+					printf("\n\n");
+					printf("Enter a value for Name: ");
+					strncpy(newName, getUserInput(newName), STRING_LEN - 1);
+					printf("\n\n");
+					printf("Enter a value for Category: ");
+					strncpy(newCategory, getUserInput(newCategory), STRING_LEN - 1);
+					printf("\n\n");
+					printf("Enter a value for Quantity: ");
+					strcpy(userInput, getUserInput(userInput));
+					newQuant = atoi(userInput);
+					printf("\n\n");
+					printf("Enter a value for Price: ");
+					strcpy(userInput, getUserInput(userInput));
+					newPrice = atof(userInput);
+					printf("\n\n");
+					rndAccessCreateRec(id, newQuant, newPrice, newName, newCategory, fileName);
+					rndAccessReadRec(fileName, id);
+					displayAllRecs(fileName);
+					break;
 
-	rndAccessUpdtRec("../inventory.bin", 1, rand()); 
-	rndAccessUpdtRec("../inventory.bin", 2, 23.99);
-	rndAccessUpdtRec("../inventory.bin", 3, 545.99);
-	rndAccessUpdtRec("../inventory.bin", 4, rand());*/ 
+				case 2:
+					printf("Enter the ProductId of the record you would like to read: ");
+					strcpy(userInput, getUserInput(userInput));
+					printf("\n\n");
+					id = atoi(userInput);
+					if (id == 0)
+					{
+						printf("Invalid ProductId value, must enter a positive and non-zero integer.\n\n");
+						continue;
+					}
+					if (checkRecExists(fileName, id) == -1)
+					{
+						printf("No such record exists with the corresponding ProductId.\n");
+						continue;
+					}
+					rndAccessReadRec(fileName, id);
+					break;
 
+				case 3:
+					printf("Enter the ProductId of the record you would like to update: ");
+					strcpy(userInput, getUserInput(userInput));
+					printf("\n\n");
+					id = atoi(userInput);
+					if (id == 0)
+					{
+						printf("Invalid ProductId value, must enter a positive and non-zero integer.\n\n");
+						continue;
+					}
+					if (checkRecExists(fileName, id) == -1)
+					{
+						printf("No such record exists with the corresponding ProductId.\n");
+						continue;
+					}
+					strcpy(userInput, "");
+					printf("Select which entity you would like to update:\n\n\t1. Name\t2. Category\t3. Quantity\t4. Price\n\nEnter a number corresponding with the option you want to select: ");
+					strcpy(userInput, getUserInput(userInput));
+					printf("\n\n");
+					menuChoice = atoi(userInput);
+					if (menuChoice == 0)
+					{
+						printf("Invalid menu selection, must enter a number option showing on the menu.\n\n");
+						continue;
+					}
+					strcpy(userInput, "");
+					switch (menuChoice)
+					{
+					case 1:
+						printf("Enter a value for the name: ");
+						strncpy(userInput, getUserInput(userInput), STRING_LEN - 1);
+						printf("\n\n");
+						rndAccessUpdtRec(fileName, id, menuChoice, userInput);
+						strcpy(userInput, "");
+						break;
+
+					case 2:
+						printf("Enter a value for the category: ");
+						strncpy(userInput, getUserInput(userInput), STRING_LEN - 1);
+						printf("\n\n");
+						rndAccessUpdtRec(fileName, id, menuChoice, userInput);
+						strcpy(userInput, "");
+						break;
+
+					case 3:
+						printf("Enter a value for the quantity: ");
+						strncpy(userInput, getUserInput(userInput), STRING_LEN - 1);
+						printf("\n\n");
+						rndAccessUpdtRec(fileName, id, menuChoice, userInput);
+						strcpy(userInput, "");
+						break;
+
+					case 4:
+						printf("Enter a value for the price: ");
+						strncpy(userInput, getUserInput(userInput), STRING_LEN - 1);
+						printf("\n\n");
+						rndAccessUpdtRec(fileName, id, menuChoice, userInput);
+						strcpy(userInput, "");
+						break;
+					}
+					break;
+
+				case 4:
+					printf("Enter the ProductId of the record you would like to delete: ");
+					strcpy(userInput, getUserInput(userInput));
+					printf("\n\n");
+					id = atoi(userInput);
+					if (id == 0)
+					{
+						printf("Invalid ProductId value, must enter a positive and non-zero integer.\n\n");
+						continue;
+					}
+					if (checkRecExists(fileName, id) == -1)
+					{
+						printf("No such record exists with the corresponding ProductId.\n");
+						continue;
+					}
+					rndAccessDltRec(fileName, id);
+					break;
+
+				default:
+					break;
+				}
+			}
+			menuChoice = 0;
+			strcpy(userInput, "");
+			break;
+
+		case 3:
+			printf("Select a CRUD operation you want to perform:\n\n\t1.Create Record\t2. Read Record\t3. Update Record\t4. Delete Record\n\nEnter a number corresponding with the option you want to select: ");
+			strcpy(userInput, getUserInput(userInput));
+			printf("\n\n");
+			menuChoice = atoi(userInput);
+			if (menuChoice == 0)
+			{
+				printf("Invalid menu selection, must enter a number option showing on the menu.\n\n");
+				continue;
+			}
+			strcpy(userInput, "");
+
+
+			menuChoice = 0;
+			strcpy(userInput, "");
+			break;
+
+		case 4:
+			printf("Exiting...");
+			break;
+
+		default:
+			printf("Invalid menu selection, must enter a number option showing on the menu.\n\n");
+			break;
+		}
+	}
 	return 0;
 }

@@ -1,4 +1,2 @@
 ProductId,Name,Category,Quantity,Price
-,namD
-,5D
-,$400
+001D,NameD,50D,$400

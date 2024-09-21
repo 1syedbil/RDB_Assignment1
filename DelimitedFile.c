@@ -116,7 +116,7 @@ char* CSVInputValidation()
 	else
 	{
 		delimInput[strlen(delimInput) - 1] = "\0";	//truncates the line break from inputting
-		strcpy(delimInput, output);	//copies validated input to the output string
+		strcpy(output, delimInput);	//copies validated input to the output string
 		strcat(output, ",");	//Appends a comma to validated input
 
 		printf("Please input item name:\n");

@@ -27,11 +27,5 @@ int main(void)
 	they would like to delete.
 	*
 	*/
-
-	FILE* myFile = NULL;
-	myFile = CSVFileStarter();
-	CSVReadFile(myFile);
-	CSVWriteToFile(myFile);
-
 	return 0;
 }

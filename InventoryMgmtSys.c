@@ -15,6 +15,11 @@ int main(void)
 	{
 		printf("Select an option for file access:\n\n\t1. Sequential Access\t2. Random Access\t3. Delimited File Access\t4. Exit\n\nEnter a number corresponding with the option you want to select: ");
 		strcpy(userInput, getUserInput(userInput));
+		if (strlen(userInput) == 0)
+		{
+			printf("Error: you must input a value. Input cannot be empty.\n\n");  
+			continue;
+		}
 		printf("\n\n");
 		menuChoice = atoi(userInput);
 		if (menuChoice == 0)
@@ -29,6 +34,11 @@ int main(void)
 		case 1:
 			printf("Select a CRUD operation you want to perform:\n\n\t1.Create Record\t2. Read Record\t3. Update Record\t4. Delete Record\n\nEnter a number corresponding with the option you want to select: ");
 			strcpy(userInput, getUserInput(userInput));
+			if (strlen(userInput) == 0)
+			{
+				printf("Error: you must input a value. Input cannot be empty.\n\n");
+				continue;
+			}
 			printf("\n\n");
 			menuChoice = atoi(userInput);
 			if (menuChoice == 0)
@@ -48,6 +58,11 @@ int main(void)
 			{
 				printf("Select a CRUD operation you want to perform:\n\n\t1.Create Record\t2. Read Record\t3. Update Record\t4. Delete Record\t5. Back\n\nEnter a number corresponding with the option you want to select: ");
 				strcpy(userInput, getUserInput(userInput));
+				if (strlen(userInput) == 0)
+				{
+					printf("Error: you must input a value. Input cannot be empty.\n\n");
+					continue;
+				}
 				printf("\n\n");
 				menuChoice = atoi(userInput);
 				if (menuChoice == 0)
@@ -63,7 +78,7 @@ int main(void)
 					printf("Enter a value for ProductId (this is the primary key): ");
 					strcpy(userInput, getUserInput(userInput));
 					id = atoi(userInput);
-					if (id == 0)
+					if (id <= 0)
 					{
 						printf("Invalid ProductId value, must enter a positive and non-zero integer.\n\n");
 						continue;
@@ -82,15 +97,21 @@ int main(void)
 					printf("\n\n");
 					printf("Enter a value for Quantity: ");
 					strcpy(userInput, getUserInput(userInput));
-					newQuant = atoi(userInput);
+					newQuant = validateQuant(userInput);
+					if (newQuant == -1)
+					{
+						continue;
+					}
 					printf("\n\n");
 					printf("Enter a value for Price: ");
 					strcpy(userInput, getUserInput(userInput));
-					newPrice = atof(userInput);
+					newPrice = validatePrice(userInput);
+					if (newPrice == -1)
+					{
+						continue;
+					}
 					printf("\n\n");
 					rndAccessCreateRec(id, newQuant, newPrice, newName, newCategory, fileName);
-					rndAccessReadRec(fileName, id);
-					displayAllRecs(fileName);
 					break;
 
 				case 2:
@@ -98,7 +119,7 @@ int main(void)
 					strcpy(userInput, getUserInput(userInput));
 					printf("\n\n");
 					id = atoi(userInput);
-					if (id == 0)
+					if (id <= 0)
 					{
 						printf("Invalid ProductId value, must enter a positive and non-zero integer.\n\n");
 						continue;
@@ -116,7 +137,7 @@ int main(void)
 					strcpy(userInput, getUserInput(userInput));
 					printf("\n\n");
 					id = atoi(userInput);
-					if (id == 0)
+					if (id <= 0)
 					{
 						printf("Invalid ProductId value, must enter a positive and non-zero integer.\n\n");
 						continue;
@@ -127,8 +148,13 @@ int main(void)
 						continue;
 					}
 					strcpy(userInput, "");
-					printf("Select which entity you would like to update:\n\n\t1. Name\t2. Category\t3. Quantity\t4. Price\n\nEnter a number corresponding with the option you want to select: ");
+					printf("Select which attribute you would like to update:\n\n\t1. Name\t2. Category\t3. Quantity\t4. Price\n\nEnter a number corresponding with the option you want to select: ");
 					strcpy(userInput, getUserInput(userInput));
+					if (strlen(userInput) == 0)
+					{
+						printf("Error: you must input a value. Input cannot be empty.\n\n");
+						continue;
+					}
 					printf("\n\n");
 					menuChoice = atoi(userInput);
 					if (menuChoice == 0)
@@ -158,6 +184,10 @@ int main(void)
 					case 3:
 						printf("Enter a value for the quantity: ");
 						strncpy(userInput, getUserInput(userInput), STRING_LEN - 1);
+						if (validateQuant(userInput) == -1)
+						{
+							continue;
+						}
 						printf("\n\n");
 						rndAccessUpdtRec(fileName, id, menuChoice, userInput);
 						strcpy(userInput, "");
@@ -166,6 +196,10 @@ int main(void)
 					case 4:
 						printf("Enter a value for the price: ");
 						strncpy(userInput, getUserInput(userInput), STRING_LEN - 1);
+						if (validatePrice(userInput) == -1)
+						{
+							continue;
+						}
 						printf("\n\n");
 						rndAccessUpdtRec(fileName, id, menuChoice, userInput);
 						strcpy(userInput, "");
@@ -178,7 +212,7 @@ int main(void)
 					strcpy(userInput, getUserInput(userInput));
 					printf("\n\n");
 					id = atoi(userInput);
-					if (id == 0)
+					if (id <= 0)
 					{
 						printf("Invalid ProductId value, must enter a positive and non-zero integer.\n\n");
 						continue;
@@ -202,6 +236,11 @@ int main(void)
 		case 3:
 			printf("Select a CRUD operation you want to perform:\n\n\t1.Create Record\t2. Read Record\t3. Update Record\t4. Delete Record\n\nEnter a number corresponding with the option you want to select: ");
 			strcpy(userInput, getUserInput(userInput));
+			if (strlen(userInput) == 0)
+			{
+				printf("Error: you must input a value. Input cannot be empty.\n\n");
+				continue;
+			}
 			printf("\n\n");
 			menuChoice = atoi(userInput);
 			if (menuChoice == 0)

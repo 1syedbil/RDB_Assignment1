@@ -5,7 +5,14 @@
 
 void rndAccessCreateRec(int id, int quant, double price, char name[STRING_LEN], char cat[STRING_LEN], char fileName[STRING_LEN])
 {
-	RndAccessRecord rec = { 0, "", "", 0, 0 };
+	if (id == 0 || quant == 0 || price == 0 || strlen(name) == 0 || strlen(cat) == 0)
+	{
+		printf("Error: could not write new record to file. No attributes can have an empty value. All must be filled.\n\n");
+		return;
+
+	}
+	
+	RndAccessRecord rec = { 0, "", "", 0, 0};
 
 	rec.productId = id;
 	rec.quantity = quant;
@@ -32,7 +39,7 @@ void rndAccessCreateRec(int id, int quant, double price, char name[STRING_LEN], 
 		return;
 	}
 
-	printf("New record added to file.\n\n");
+	printf("New record (ID: %d) added to file.\n\n", id);
 }
 
 void rndAccessReadRec(char fileName[STRING_LEN], int id)
@@ -78,6 +85,12 @@ void rndAccessReadRec(char fileName[STRING_LEN], int id)
 
 void rndAccessUpdtRec(char fileName[STRING_LEN], int id, int choice, char input[STRING_LEN])
 {
+	if (strlen(input) == 0)
+	{
+		printf("Error: could not update the record. No attributes can have an empty value.\n\n");
+		return;
+	}
+
 	RndAccessRecord saveRec = { 0, "", "", 0, 0 };
 
 	FILE* rndAccessFile = fopen(fileName, "rb+");
@@ -379,4 +392,26 @@ char* getUserInput(char input[STRING_LEN])
 	}
 
 	return input;
+}
+
+int validateQuant(char input[STRING_LEN])
+{
+	if (atoi(input) != atof(input) || atoi(input) <= 0)
+	{
+		printf("Error: invalid input. Quantity value must be a positive and non-zero integer.\n\n");
+		return -1;
+	}
+
+	return atoi(input); 
+}
+
+double validatePrice(char input[STRING_LEN])
+{
+	if (atof(input) <= 0)
+	{
+		printf("Error: invalid input. Price value must be a positive and non-zero number.\n\n");
+		return -1;
+	}
+
+	return atof(input); 
 }

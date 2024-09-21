@@ -27,17 +27,6 @@ typedef struct {
 //THIS FILE IS WHERE ALL OF THE FUNCTION PROTOTYPES WILL GO 
 
 //Random Access
-/*
-- function to create an entry
-
-- function to read out entries
-
-- function to update an entry
-
-- function to delete entries
-
-- any other functions necessary...
-*/
 
 void rndAccessCreateRec(int id, int quant, double price, char name[STRING_LEN], char cat[STRING_LEN], char fileName[STRING_LEN]);
 
@@ -54,6 +43,10 @@ void displayAllRecs(char fileName[STRING_LEN]);
 int checkRecExists(char fileName[STRING_LEN], int id);
 
 char* getUserInput(char input[STRING_LEN]);
+
+int validateQuant(char input[STRING_LEN]);
+
+double validatePrice(char input[STRING_LEN]); 
 
 //Sequential Access
 /*

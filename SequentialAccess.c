@@ -1,5 +1,12 @@
 #include "InventoryMgmtSys.h"
 
+//
+// Function       : ReadProduct
+// Description    :Open the file and if we can open the file it will return a error message.It will read all the information in the file with fread function
+// Parameter      :
+//      Struct Product: products[]: the struct to hold all the data from the file and from the user change
+// Return         :
+//      int times: the amount of tiimes of reading
 
 
 int ReadProducts(struct Product products[]) {
@@ -22,6 +29,14 @@ int ReadProducts(struct Product products[]) {
     return times;
 }
 
+//
+// Function       : WriteProduct
+// Description    : Open the file and if we can open the file it will return a error message. And it will write in the file
+// Parameter      :
+//      Struct Product: products[]: the struct to hold all the data from the file and from the user change
+//      int           : times     : the amount of times it will store the information
+// Return         :
+//      None
 
 void WriteProducts(struct Product products[], int times) {
     FILE* sequentialFile = NULL;
@@ -40,7 +55,17 @@ void WriteProducts(struct Product products[], int times) {
     }
     fclose(sequentialFile);
 }
-
+//
+// Function       : AddProduct
+// Description    :First I will checkk the times of product that i have add if it is overflow, it will return is the empty.I will take the id of the product that the user want to update by scanf 
+//                 and after that I will use a loop to find where is that struct . If the id is not valid (id is smaller or equal to zero), it will return a message if invalid id please enter a 
+//                 positive integer.After validate the id, I will use a loop to find where is that struct.After that, we will validate the name,category,quantity and the price of the product.
+//                 Especially with the id I will check that do i have that id before . if the id have already existed, it will return an error message if the user enter no word it will return a error
+// Parameter      :
+//      Struct Product: products[]: the struct to hold all the data from the file and from the user change
+//      int           : times     : the amount of times it will store the information
+// Return         :
+//      None
 
 void AddProduct(struct Product products[], int* times) {
     if (*times >= MAX_PRODUCTS) {
@@ -95,7 +120,17 @@ void AddProduct(struct Product products[], int* times) {
     WriteProducts(products, *times);
 }
 
-
+//
+// Function       : UpdateProduct
+// Description    :This function will take the id of the product that the user want to update by scanf and after that I will use a loop to find where is that struct. If the id is not valid 
+//                 (id is smaller or equal to zero), it will return a message if invalid id please enter a positive integer.After validate the id, I will use a loop to find where is that struct.
+//                 After that, we will validate the id,name,category,quantity and the price of the product. Especially with the id I will check that do i have that id before . if the id have 
+//                 already existed, it will return an error message. if the user enter no word it will return a error
+// Parameter      :
+//      Struct Product: products[]: the struct to hold all the data from the file and from the user change
+//      int           : times     : the amount of times it will store the information
+// Return         :
+//      None
 
 void UpdateProduct(struct Product products[], int times) {
     int id=0;
@@ -140,7 +175,16 @@ void UpdateProduct(struct Product products[], int times) {
     }
     printf("Error:Product not found.\n");
 }
-
+//
+// Function       : DeleteProduct
+// Description    :This function will take the id of the product that the user want to delete by scanf and after that I will use a loop to find where is that struct. After that 
+//                  we will make the one more loop to remove the all the product behind to the previous index so that will delete the product that user want. After all we will return o
+//                  message of the work has been done or not
+// Parameter      :
+//      Struct Product: products[]: the struct to hold all the data from the file and from the user change
+//      int           : times     : the amount of times it will store the information
+// Return         :
+//      None
 
 void DeleteProduct(struct Product products[], int* times) {
     int id = 0;

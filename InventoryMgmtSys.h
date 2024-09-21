@@ -15,7 +15,6 @@
 #define STRING_LEN 50
 
 //STRUCT DEFINITIONS
-#pragma pack(push, 1)
 typedef struct {
     int productId;
     char name[STRING_LEN];
@@ -23,7 +22,6 @@ typedef struct {
     int quantity;
     double price;
 } RndAccessRecord;
-#pragma pack(pop)
 
 
 //THIS FILE IS WHERE ALL OF THE FUNCTION PROTOTYPES WILL GO 

@@ -28,5 +28,10 @@ int main(void)
 	*
 	*/
 
+	FILE* myFile = NULL;
+	myFile = CSVFileStarter();
+	CSVReadFile(myFile);
+	CSVWriteToFile(myFile);
+
 	return 0;
 }

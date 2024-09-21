@@ -40,7 +40,7 @@ int ReadProducts(struct Product products[]) {
 
 void WriteProducts(struct Product products[], int times) {
     FILE* sequentialFile = NULL;
-    sequentialFile = fopen("sampleData.txt", "r");
+    sequentialFile = fopen("sampleData.txt", "w");
     if (!sequentialFile) {
         perror("Error:Unable to open file");
         return ;
@@ -114,6 +114,7 @@ void AddProduct(struct Product products[], int* times) {
         printf("Error:Invalid price. Please enter a non-negative number: ");
         while (getchar() != '\n'); 
     }
+    printf("Add product complete\n");
 
     products[*times] = newProduct;
     (*times)++;
@@ -169,7 +170,7 @@ void UpdateProduct(struct Product products[], int times) {
             }
 
             WriteProducts(products, times);
-            printf("Error:Update product complete\n");
+            printf("Update product complete\n");
             return;
         }
     }
@@ -198,7 +199,7 @@ void DeleteProduct(struct Product products[], int* times) {
             }
             (*times)--;
             WriteProducts(products, *times);
-            printf("Product deleted.\n");
+            printf("Delete product complete.\n");
             return;
         }
     }

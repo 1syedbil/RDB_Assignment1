@@ -11,8 +11,8 @@ void rndAccessCreateRec(int id, int quant, double price, char name[STRING_LEN], 
 		return;
 
 	}
-	
-	RndAccessRecord rec = { 0, "", "", 0, 0};
+
+	RndAccessRecord rec = { 0, "", "", 0, 0 };
 
 	rec.productId = id;
 	rec.quantity = quant;
@@ -138,11 +138,11 @@ void rndAccessUpdtRec(char fileName[STRING_LEN], int id, int choice, char input[
 		break;
 
 	case 3:
-		saveRec.quantity = atoi(input);
+		saveRec.quantity = validateQuant(input); 
 		break;
 
 	case 4:
-		saveRec.price = atof(input);
+		saveRec.price = validatePrice(input); 
 		break;
 	}
 
@@ -402,7 +402,7 @@ int validateQuant(char input[STRING_LEN])
 		return -1;
 	}
 
-	return atoi(input); 
+	return atoi(input);
 }
 
 double validatePrice(char input[STRING_LEN])
@@ -413,5 +413,5 @@ double validatePrice(char input[STRING_LEN])
 		return -1;
 	}
 
-	return atof(input); 
+	return atof(input);
 }

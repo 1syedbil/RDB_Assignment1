@@ -2,59 +2,75 @@
 
 int main(void)
 {
-	char fileName[STRING_LEN] = "../inventory.bin";
+	struct Product products[MAX_PRODUCTS] = { NULL }; 
+	int times = readProducts(products);
+	char rndAccFileName[STRING_LEN] = "../inventory.bin"; 
 	char userInput[STRING_LEN] = "";
+	char menuChoice1[STRING_LEN] = "";
+	char menuChoice2[STRING_LEN] = "";
+	char menuChoice3[STRING_LEN] = "";
+	int choice1 = 0;
+	int choice2 = 0;
+	int choice3 = 0;
 	int id = 0;
 	char newName[STRING_LEN] = "";
-	char newCategory[STRING_LEN] = "";
+	char newCategory[STRING_LEN] = ""; 
 	int newQuant = 0;
-	double newPrice = 0;
-	int menuChoice = 0;
+	double newPrice = 0; 
 
-	while (menuChoice != 4)
+	do
 	{
-		printf("Select an option for file access:\n\n\t1. Sequential Access\t2. Random Access\t3. Delimited File Access\t4. Exit\n\nEnter a number corresponding with the option you want to select: ");
-		strcpy(userInput, getUserInput(userInput));
-		if (strlen(userInput) == 0)
-		{
-			printf("Error: you must input a value. Input cannot be empty.\n\n");  
-			continue;
-		}
-		printf("\n\n");
-		menuChoice = atoi(userInput);
-		if (menuChoice == 0)
-		{
-			printf("Invalid menu selection, must enter a number option showing on the menu.\n\n");
-			continue;
-		}
-		strcpy(userInput, "");
+		printf("File Access Program Menu:\n\n     1. Sequential Access     2. Random Access     3. Delimited File     4. Exit\n\n");
+		printf("Enter a number corresponding with your menu selection: ");
+		strcpy(menuChoice1, getUserInput(menuChoice1));  
+		printf("\n\n");    
+		choice1 = atoi(menuChoice1); 
 
-		switch (menuChoice)
+		switch (choice1)
 		{
 		case 1:
-			printf("Select a CRUD operation you want to perform:\n\n\t1.Create Record\t2. Read Record\t3. Update Record\t4. Delete Record\n\nEnter a number corresponding with the option you want to select: ");
-			strcpy(userInput, getUserInput(userInput));
-			if (strlen(userInput) == 0)
+			do
 			{
-				printf("Error: you must input a value. Input cannot be empty.\n\n");
-				continue;
-			}
-			printf("\n\n");
-			menuChoice = atoi(userInput);
-			if (menuChoice == 0)
-			{
-				printf("Invalid menu selection, must enter a number option showing on the menu.\n\n");
-				continue;
-			}
-			strcpy(userInput, "");
 
+				printf("Sequential Access Menu:\n\n     1. Create a Record     2. Read All Records     3. Update a Record     4. Delete a Record     5. Back\n\n");
+				printf("Enter a number corresponding with your menu selection: ");
+				strcpy(menuChoice2, getUserInput(menuChoice2));
+				printf("\n\n");
+				choice2 = atoi(menuChoice2);
 
-			menuChoice = 0;
-			strcpy(userInput, "");
+				switch (choice2)
+				{
+				case 1:
+					addProduct(products, &times);
+					break;
+
+				case 2:
+					displayProducts(products, times); 
+					break;
+
+				case 3:
+					updateProduct(products, times);
+					break;
+
+				case 4:
+					deleteProduct(products, &times);
+					break;
+
+				case 5:
+					printf("Going back...\n\n");
+					break;
+
+				default:
+					printf("Error: invalid menu selection.\n\n");
+					break;
+				}
+
+			} while (choice2 != 5);
+
 			break;
 
 		case 2:
-			while (menuChoice != 5)
+			do
 			{
 				printf("Select a CRUD operation you want to perform:\n\n\t1.Create Record\t2. Read Record\t3. Update Record\t4. Delete Record\t5. Back\n\nEnter a number corresponding with the option you want to select: ");
 				strcpy(userInput, getUserInput(userInput));
@@ -64,15 +80,15 @@ int main(void)
 					continue;
 				}
 				printf("\n\n");
-				menuChoice = atoi(userInput);
-				if (menuChoice == 0)
+				choice2 = atoi(userInput);
+				if (choice2 == 0)
 				{
 					printf("Invalid menu selection, must enter a number option showing on the menu.\n\n");
 					continue;
 				}
 				strcpy(userInput, "");
 
-				switch (menuChoice)
+				switch (choice2)
 				{
 				case 1:
 					printf("Enter a value for ProductId (this is the primary key): ");
@@ -83,14 +99,14 @@ int main(void)
 						printf("Invalid ProductId value, must enter a positive and non-zero integer.\n\n");
 						continue;
 					}
-					if (checkRecExists(fileName, id) != -1)
+					if (checkRecExists(rndAccFileName, id) != -1)
 					{
 						printf("A record with this ProductId already exists. No duplicated IDs allowed.\n\n");
 						continue;
 					}
 					printf("\n\n");
 					printf("Enter a value for Name: ");
-					strncpy(newName, getUserInput(newName), STRING_LEN - 1);
+					strncpy(newName, getUserInput(newName), STRING_LEN - 1); 
 					printf("\n\n");
 					printf("Enter a value for Category: ");
 					strncpy(newCategory, getUserInput(newCategory), STRING_LEN - 1);
@@ -111,7 +127,7 @@ int main(void)
 						continue;
 					}
 					printf("\n\n");
-					rndAccessCreateRec(id, newQuant, newPrice, newName, newCategory, fileName);
+					rndAccessCreateRec(id, newQuant, newPrice, newName, newCategory, rndAccFileName); 
 					break;
 
 				case 2:
@@ -124,12 +140,12 @@ int main(void)
 						printf("Invalid ProductId value, must enter a positive and non-zero integer.\n\n");
 						continue;
 					}
-					if (checkRecExists(fileName, id) == -1)
+					if (checkRecExists(rndAccFileName, id) == -1)
 					{
 						printf("No such record exists with the corresponding ProductId.\n");
 						continue;
 					}
-					rndAccessReadRec(fileName, id);
+					rndAccessReadRec(rndAccFileName, id);
 					break;
 
 				case 3:
@@ -142,7 +158,7 @@ int main(void)
 						printf("Invalid ProductId value, must enter a positive and non-zero integer.\n\n");
 						continue;
 					}
-					if (checkRecExists(fileName, id) == -1)
+					if (checkRecExists(rndAccFileName, id) == -1)
 					{
 						printf("No such record exists with the corresponding ProductId.\n");
 						continue;
@@ -156,20 +172,20 @@ int main(void)
 						continue;
 					}
 					printf("\n\n");
-					menuChoice = atoi(userInput);
-					if (menuChoice == 0)
+					choice2 = atoi(userInput); 
+					if (choice2 == 0)
 					{
 						printf("Invalid menu selection, must enter a number option showing on the menu.\n\n");
 						continue;
 					}
 					strcpy(userInput, "");
-					switch (menuChoice)
+					switch (choice2)
 					{
 					case 1:
 						printf("Enter a value for the name: ");
 						strncpy(userInput, getUserInput(userInput), STRING_LEN - 1);
 						printf("\n\n");
-						rndAccessUpdtRec(fileName, id, menuChoice, userInput);
+						rndAccessUpdtRec(rndAccFileName, id, choice2, userInput);
 						strcpy(userInput, "");
 						break;
 
@@ -177,7 +193,7 @@ int main(void)
 						printf("Enter a value for the category: ");
 						strncpy(userInput, getUserInput(userInput), STRING_LEN - 1);
 						printf("\n\n");
-						rndAccessUpdtRec(fileName, id, menuChoice, userInput);
+						rndAccessUpdtRec(rndAccFileName, id, choice2, userInput);
 						strcpy(userInput, "");
 						break;
 
@@ -189,7 +205,7 @@ int main(void)
 							continue;
 						}
 						printf("\n\n");
-						rndAccessUpdtRec(fileName, id, menuChoice, userInput);
+						rndAccessUpdtRec(rndAccFileName, id, choice2, userInput);
 						strcpy(userInput, "");
 						break;
 
@@ -201,7 +217,7 @@ int main(void)
 							continue;
 						}
 						printf("\n\n");
-						rndAccessUpdtRec(fileName, id, menuChoice, userInput);
+						rndAccessUpdtRec(rndAccFileName, id, choice2, userInput);
 						strcpy(userInput, "");
 						break;
 					}
@@ -217,42 +233,60 @@ int main(void)
 						printf("Invalid ProductId value, must enter a positive and non-zero integer.\n\n");
 						continue;
 					}
-					if (checkRecExists(fileName, id) == -1)
+					if (checkRecExists(rndAccFileName, id) == -1)
 					{
 						printf("No such record exists with the corresponding ProductId.\n");
 						continue;
 					}
-					rndAccessDltRec(fileName, id);
+					rndAccessDltRec(rndAccFileName, id);
 					break;
 
 				default:
 					break;
 				}
-			}
-			menuChoice = 0;
+			} while (choice2 != 5);
+			choice2 = 0;
 			strcpy(userInput, "");
 			break;
 
 		case 3:
-			printf("Select a CRUD operation you want to perform:\n\n\t1.Create Record\t2. Read Record\t3. Update Record\t4. Delete Record\n\nEnter a number corresponding with the option you want to select: ");
-			strcpy(userInput, getUserInput(userInput));
-			if (strlen(userInput) == 0)
+			do
 			{
-				printf("Error: you must input a value. Input cannot be empty.\n\n");
-				continue;
-			}
-			printf("\n\n");
-			menuChoice = atoi(userInput);
-			if (menuChoice == 0)
-			{
-				printf("Invalid menu selection, must enter a number option showing on the menu.\n\n");
-				continue;
-			}
-			strcpy(userInput, "");
 
+				printf("Delimited File Menu:\n\n     1. Create a Record     2. Read All Records     3. Update a Record     4. Delete a Record     5. Back\n\n");
+				printf("Enter a number corresponding with your menu selection: ");
+				strcpy(menuChoice2, getUserInput(menuChoice2));
+				printf("\n\n");  
+				choice2 = atoi(menuChoice2);
 
-			menuChoice = 0;
-			strcpy(userInput, "");
+				switch (choice2)
+				{
+				case 1:
+
+					break;
+
+				case 2:
+
+					break;
+
+				case 3:
+
+					break;
+
+				case 4:
+
+					break;
+
+				case 5:
+					printf("Going back...\n\n");
+					break;
+
+				default:
+					printf("Error: invalid menu selection.\n\n");
+					break;
+				}
+
+			} while (choice2 != 5);
 			break;
 
 		case 4:
@@ -260,9 +294,11 @@ int main(void)
 			break;
 
 		default:
-			printf("Invalid menu selection, must enter a number option showing on the menu.\n\n");
+			printf("Error: invalid menu selection.\n\n");
 			break;
 		}
-	}
+
+	} while (choice1 != 4);
+
 	return 0;
 }

@@ -6,9 +6,6 @@ int main(void)
 	int times = readProducts(products);
 	char rndAccFileName[STRING_LEN] = "../inventory.bin"; 
 	char userInput[STRING_LEN] = "";
-	char menuChoice1[STRING_LEN] = "";
-	char menuChoice2[STRING_LEN] = "";
-	char menuChoice3[STRING_LEN] = "";
 	int choice1 = 0;
 	int choice2 = 0;
 	int choice3 = 0;
@@ -22,9 +19,9 @@ int main(void)
 	{
 		printf("File Access Program Menu:\n\n     1. Sequential Access     2. Random Access     3. Delimited File     4. Exit\n\n");
 		printf("Enter a number corresponding with your menu selection: ");
-		strcpy(menuChoice1, getUserInput(menuChoice1));  
+		strcpy(userInput, getUserInput(userInput));  
 		printf("\n\n");    
-		choice1 = atoi(menuChoice1); 
+		choice1 = atoi(userInput); 
 
 		switch (choice1)
 		{
@@ -34,9 +31,9 @@ int main(void)
 
 				printf("Sequential Access Menu:\n\n     1. Create a Record     2. Read All Records     3. Update a Record     4. Delete a Record     5. Back\n\n");
 				printf("Enter a number corresponding with your menu selection: ");
-				strcpy(menuChoice2, getUserInput(menuChoice2));
+				strcpy(userInput, getUserInput(userInput));
 				printf("\n\n");
-				choice2 = atoi(menuChoice2);
+				choice2 = atoi(userInput);
 
 				switch (choice2)
 				{
@@ -172,20 +169,20 @@ int main(void)
 						continue;
 					}
 					printf("\n\n");
-					choice2 = atoi(userInput); 
-					if (choice2 == 0)
+					choice3 = atoi(userInput);  
+					if (choice3 == 0)
 					{
 						printf("Invalid menu selection, must enter a number option showing on the menu.\n\n");
 						continue;
 					}
 					strcpy(userInput, "");
-					switch (choice2)
+					switch (choice3)
 					{
 					case 1:
 						printf("Enter a value for the name: ");
 						strncpy(userInput, getUserInput(userInput), STRING_LEN - 1);
 						printf("\n\n");
-						rndAccessUpdtRec(rndAccFileName, id, choice2, userInput);
+						rndAccessUpdtRec(rndAccFileName, id, choice3, userInput);
 						strcpy(userInput, "");
 						break;
 
@@ -193,7 +190,7 @@ int main(void)
 						printf("Enter a value for the category: ");
 						strncpy(userInput, getUserInput(userInput), STRING_LEN - 1);
 						printf("\n\n");
-						rndAccessUpdtRec(rndAccFileName, id, choice2, userInput);
+						rndAccessUpdtRec(rndAccFileName, id, choice3, userInput);
 						strcpy(userInput, "");
 						break;
 
@@ -205,7 +202,7 @@ int main(void)
 							continue;
 						}
 						printf("\n\n");
-						rndAccessUpdtRec(rndAccFileName, id, choice2, userInput);
+						rndAccessUpdtRec(rndAccFileName, id, choice3, userInput);
 						strcpy(userInput, "");
 						break;
 
@@ -217,7 +214,7 @@ int main(void)
 							continue;
 						}
 						printf("\n\n");
-						rndAccessUpdtRec(rndAccFileName, id, choice2, userInput);
+						rndAccessUpdtRec(rndAccFileName, id, choice3, userInput);
 						strcpy(userInput, "");
 						break;
 					}
@@ -255,9 +252,9 @@ int main(void)
 
 				printf("Delimited File Menu:\n\n     1. Create a Record     2. Read All Records     3. Update a Record     4. Delete a Record     5. Back\n\n");
 				printf("Enter a number corresponding with your menu selection: ");
-				strcpy(menuChoice2, getUserInput(menuChoice2));
+				strcpy(userInput, getUserInput(userInput));
 				printf("\n\n");  
-				choice2 = atoi(menuChoice2);
+				choice2 = atoi(userInput); 
 
 				switch (choice2)
 				{

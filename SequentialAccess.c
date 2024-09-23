@@ -309,15 +309,15 @@ void updateProduct(char fileName[STRING_LEN])
 *               see if the ID that the user inputted matches the ID of the current product being read.
 *               If it does match, then a bool variable meant to confirm if the product corresponding to 
 *               the ID exists or not, is set equal to true. And a counter variable to hold the number of
-                products in the file is incremented at the end of each loop. Once the loop is exited, the file is
-				closed. Then the function checks if the bool variable is true or not, if it is false then the function 
-				exits because no such product exists with the corresponding ID. After this the file is opened
-				once again but this time its for only writing, this way the file is wiped clean. Now that the
-				file is empty, the contents of the array used to save the contents of the file gets rewritten 
-				into the file via a loop. The loop first checks if the ID of the product in the current index matches the
-				ID of the product being deleted. If it does match, then the loop skips writing the product into
-				the file and moves to the next index. Once all of the products in the array (except for the one
-				being deleted) have been written back into the file, the loop ends and the files closes.
+*               products in the file is incremented at the end of each loop. Once the loop is exited, the file is
+*			    closed. Then the function checks if the bool variable is true or not, if it is false then the function 
+*			    exits because no such product exists with the corresponding ID. After this the file is opened
+*			    once again but this time its for only writing, this way the file is wiped clean. Now that the
+*			    file is empty, the contents of the array used to save the contents of the file gets rewritten 
+*			    into the file via a loop. The loop first checks if the ID of the product in the current index matches the
+*			    ID of the product being deleted. If it does match, then the loop skips writing the product into
+*			    the file and moves to the next index. Once all of the products in the array (except for the one
+*			    being deleted) have been written back into the file, the loop ends and the files closes.
 * PARAMETERS  :
 *	char fileName[STRING_LEN] - String to hold the file name.
 * RETURNS     :

@@ -37,14 +37,14 @@ void CSVWriteToFile(FILE* delimFile)
 	char	validatedInput[200] = "";
 	
 
-	delimFile = fopen(kDelimFileString, "a");
+	delimFile = fopen(kDelimFileString, "w+");
 	if ((delimFile == NULL)||(ferror(delimFile)))
 	{
 		printf("File could not be opened.\n");
 		return;
 	}
 
-	strcpy(validatedInput, CSVInputValidation());
+	strcpy(validatedInput, CSVInputValidation(delimFile));
 	printf("New line is %s", validatedInput);
 	if (strcmp(validatedInput, "error") == 0)
 	{
@@ -56,8 +56,6 @@ void CSVWriteToFile(FILE* delimFile)
 		}
 	}
 	fprintf(delimFile, validatedInput);
-
-	printf("Item written to file");
 	fclose(delimFile);
 	return;
 }
@@ -95,11 +93,8 @@ void CSVReadFile(FILE* delimFile)
 
 
 
-/// <summary>
-/// Takes several inputs from a user to format into a csv file
-/// </summary>
-/// <returns> string formatted as CSV OR "error" if input was invalid</returns>
-char* CSVInputValidation()
+
+char* CSVInputValidation(FILE* openFile)
 {
 	char delimInput[40] = "";
 	char output[200] = "";
@@ -107,63 +102,75 @@ char* CSVInputValidation()
 
 	printf("Please input item ID:\n");
 	fgets(delimInput, sizeof(delimInput), stdin);
-	validator = strchr(delimInput, ',');
-	if (validator != NULL) //Ensures a comma isn't used, but all other characters are allowed in the string
+	validator = strchr(delimInput, ',');	//checks if there is a comma in the input
+	if (validator != NULL)
 	{
-		printf("Commas cannot be used in a CSV file.\n");
+		printf("Commas cannot be used in CSV values.\n");
 		return "error";
 	}
-	else
+		
+	CSVFileSeek(openFile, delimInput);
+	if (feof(openFile) != 0)
 	{
-		delimInput[strlen(delimInput) - 1] = "\0";	//truncates the line break from inputting
-		strcpy(output, delimInput);	//copies validated input to the output string
-		strcat(output, ",");	//Appends a comma to validated input
-
-		printf("Please input item name:\n");
-		fgets(delimInput, sizeof(delimInput), stdin);
-		validator = strchr(delimInput, ',');
-		if (validator != NULL)
-		{
-			printf("Commas cannot be used in a CSV file.\n");
-			return "error";
-		}
-		else
-		{
-			delimInput[strlen(delimInput) -1] = "\0";
-			strcat(output, delimInput); //appends validatedinput with the new data member
-			strcat(output, ",");
-
-			printf("Please input item quantity:\n");
-			fgets(delimInput, sizeof(delimInput), stdin);
-			validator = strchr(delimInput, ',');
-			if (validator != NULL)
-			{
-				printf("Commas cannot be used in a CSV file.\n");
-				return "error";
-			}
-			else
-			{
-				delimInput[strlen(delimInput) - 1] = "\0";
-				strcat(output, delimInput); //appends validatedinput with the new data member
-				strcat(output, ",");
-
-				printf("Please input item price:\n");
-				fgets(delimInput, sizeof(delimInput), stdin);
-				validator = strchr(delimInput, ',');
-				if (validator != NULL)
-				{
-					printf("Commas cannot be used in a CSV file.\n");
-					return "error";
-				}
-				else
-				{
-					strcat(output, delimInput); //final append, does not truncate line break
-					return output;
-				}
-			}
-		}
+		printf("Items cannot have duplicate IDs.\n");
+		return "error";
 	}
+		
+	strcpy(output, delimInput);	//Writes input into the output string
+	strcat(output, ",");	//Appends value with a comma
+
+	printf("Please enter the item name:\n");
+	fgets(delimInput, sizeof(delimInput), stdin);
+	validator = strchr(delimInput, ',');
+	if (validator != NULL)
+	{
+		printf("Commas cannot be used in CSV values.\n");
+		return "error";
+	}
+
+	delimInput[strlen(delimInput) - 1] = '\0';	//truncates line break off the end of the string
+	strcat(output, delimInput);
+	strcat(output, ",");
+
+	printf("Please enter the item category:\n");
+	fgets(delimInput, sizeof(delimInput), stdin);
+	validator = strchr(delimInput, ',');
+	if (validator != NULL) 
+	{
+		printf("Commas cannot be used in CSV values.\n");
+		return "error";
+	}
+
+	delimInput[strlen(delimInput) - 1] = '\0';	
+	strcat(output, delimInput);
+	strcat(output, ",");
+
+	printf("Please enter the item quantity:\n");
+	fgets(delimInput, sizeof(delimInput), stdin);
+	validator = strchr(delimInput, ',');
+	if (validator != NULL)
+	{
+		printf("Commas cannot be used in CSV values.\n");
+		return "error";
+	}
+
+	delimInput[strlen(delimInput) - 1] = '\0';
+	strcat(output, delimInput);
+	strcat(output, ",");
+
+	printf("Please enter the item price:\n");
+	fgets(delimInput, sizeof(delimInput), stdin);
+	validator = strchr(delimInput, ',');
+	if (validator != NULL)
+	{
+		printf("Commas cannot be used in CSV values.\n");
+		return "error";
+	}
+
+	strcat(output, delimInput);	//No truncation so that the line ends in a carriage return, No appending with a comma as it's the end of the file.
+	return output;
 }
+
 
 
 
@@ -174,20 +181,30 @@ char* CSVInputValidation()
 /// <param name="ID"> String containing item ID</param>
 void CSVFileSeek(FILE* opened, char* ID)
 {
-	ID[strlen(ID) - 1] = "\0";	//Truncates the line break from entered ID
+	ID[strlen(ID) - 1] = '\0';	//Truncates the line break from entered ID
 
-	int idLen = (strlen(ID));
-	char fileIDline[40] = "";
+	char fileIDline[200] = "";
+	char* stringFinder = NULL;
 
-	while (feof(opened) == 0) //loops until end of file
+	//SOMETHING IS WRONG WITH THIS LOOP AND IT'S INFINITE
+	//FILE ERROR BEING CONSISTENTLY ENCOUNTERED
+	while (feof(opened) ==0) //loops until end of file
 	{
-		fgets(fileIDline, idLen, opened);
-		if (strcmp(fileIDline, ID) == 0)
+		fgets(fileIDline, sizeof(ID), opened);	//gets string the length of the inputted ID
+		stringFinder = strstr(fileIDline,ID);
+		if (stringFinder != NULL)
 		{
 			opened -= sizeof(fileIDline);	//Backs up pointer to beginning of line in file
+			printf("ID %s found.",ID);
 			return;
 		}
-	}	
+
+		if (ferror(opened))
+		{
+			printf("File error encountered.\n");
+			return;
+		}
+	}
 	printf("End of file reached, %s was not found,\n", ID);
 	return;
 }
@@ -207,7 +224,7 @@ void CSVFileDeleteLine(FILE* delimFile)
 	delimFile = fopen(kDelimFileString, "rw");	//opens file at pointer for reading and writing
 	if (delimFile == NULL)
 	{
-		printf("File could not be opened.");
+		printf("File could not be opened.\n");
 		return;
 	}
 
@@ -216,6 +233,7 @@ void CSVFileDeleteLine(FILE* delimFile)
 	CSVFileSeek(delimFile,idInput);
 	if (feof(delimFile) != 0)
 	{
+		printf("ID was not found.\n");
 		fclose(delimFile);
 		return;
 	}
@@ -239,12 +257,12 @@ void CSVFileUpdate(FILE* delimFile)
 	delimFile = fopen(kDelimFileString, "rw");	//opens file at pointer for reading and writing
 	if ((delimFile == NULL) || (ferror(delimFile)))
 	{
-		printf("File could not be opened.");
+		printf("File could not be openedn");
 		fclose(delimFile);
 		return;
 	}
 
-	printf("Please input the ID of the item you would like to delete.");
+	printf("Please input the ID of the item you would like to update:\n");
 	fgets(idInput, sizeof(idInput), delimFile);
 	CSVFileSeek(delimFile, idInput);
 	if (feof(delimFile) == 0)
@@ -254,7 +272,7 @@ void CSVFileUpdate(FILE* delimFile)
 	}
 	else
 	{
-		strcpy(validatedInput, CSVInputValidation());
+		strcpy(validatedInput, CSVInputValidation(delimFile));
 		if (strcmp(validatedInput, "error") == 0)
 		{
 			fprintf(delimFile, validatedInput);

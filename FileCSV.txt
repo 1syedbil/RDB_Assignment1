@@ -1,2 +1,0 @@
-ProductId,Name,Category,Quantity,Price
-001D,NameD,50D,$400

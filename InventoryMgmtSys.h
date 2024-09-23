@@ -46,6 +46,7 @@ void CSVReadFile(FILE* delimFile);
 char* CSVInputValidation();
 void CSVFileDeleteLine(FILE* delimFile);
 void CSVFileUpdate(FILE* delimFile);
+void CSVFileSeek(FILE* opened, char* ID);
 
 #endif
 

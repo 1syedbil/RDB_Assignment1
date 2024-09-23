@@ -1,9 +1,19 @@
+/*
+* FILE          : SequentialAccess.c
+* PROJECT       : Relational Databases Assignment 1
+* PROGRAMMERS   : Bilal Syed, Morgan Tabor, Quang Minh Vu
+* FIRST VERSION : 2024-09-13
+* DESCRIPTION   : This file contains the function definitions for all of the sequential
+*                 access CRUD operations. All of the code in this file was written by 
+*                 Quang Minh Vu and Bilal Syed.
+*/
+
 #include "InventoryMgmtSys.h"
 
 void addProduct(char fileName[STRING_LEN])
 {
 	char userInput[STRING_LEN] = "";
-	Product fileProducts[20] = { NULL };
+	Product fileProducts[ARRAY_SIZE] = { NULL };
 	Product newProduct = { 0, "", "", 0, 0 };
 
 	FILE* sequentialFile = fopen(fileName, "a+");
@@ -29,6 +39,7 @@ void addProduct(char fileName[STRING_LEN])
 	strcpy(userInput, getUserInput(userInput));
 	if (!validateInt(userInput))
 	{
+		printf("Error: invalid input. Must be a non-zero and positive integer.\n\n");
 		return;
 	}
 	newProduct.id = atoi(userInput);
@@ -60,6 +71,7 @@ void addProduct(char fileName[STRING_LEN])
 	strcpy(userInput, getUserInput(userInput));
 	if (!validateInt(userInput))
 	{
+		printf("Error: invalid input. Must be a non-zero and positive integer.\n\n");
 		return;
 	}
 	newProduct.quantity = atoi(userInput);
@@ -68,6 +80,7 @@ void addProduct(char fileName[STRING_LEN])
 	strcpy(userInput, getUserInput(userInput));
 	if (!validateDouble(userInput))
 	{
+		printf("Error: invalid input. Must be a positive and non-zero number.\n\n"); 
 		return;
 	}
 	newProduct.price = atof(userInput);
@@ -121,8 +134,7 @@ void displayProducts(char fileName[STRING_LEN])
 void updateProduct(char fileName[STRING_LEN])
 {
 	char userInput[STRING_LEN] = "";
-	char fileContents[20][STRING_LEN] = { NULL };
-	Product fileProducts[20] = { NULL };
+	Product fileProducts[ARRAY_SIZE] = { NULL }; 
 	Product newProduct = { 0, "", "", 0, 0 };
 	int counter = 0;
 	bool idExists = false;
@@ -138,6 +150,7 @@ void updateProduct(char fileName[STRING_LEN])
 	strcpy(userInput, getUserInput(userInput));
 	if (!validateInt(userInput))
 	{
+		printf("Error: invalid input. Must be a non-zero and positive integer.\n\n");
 		return;
 	}
 	newProduct.id = atoi(userInput);
@@ -163,13 +176,6 @@ void updateProduct(char fileName[STRING_LEN])
 		return;
 	}
 
-	sequentialFile = fopen(fileName, "w");
-	if (sequentialFile == NULL)
-	{
-		printf("fopen() failed.\n\n");
-		return;
-	}
-
 	printf("Enter a Name for the product: ");
 	strcpy(newProduct.name, getUserInput(newProduct.name));
 	if (!validateString(newProduct.name))
@@ -188,6 +194,7 @@ void updateProduct(char fileName[STRING_LEN])
 	strcpy(userInput, getUserInput(userInput));
 	if (!validateInt(userInput))
 	{
+		printf("Error: invalid input. Must be a non-zero and positive integer.\n\n");
 		return;
 	}
 	newProduct.quantity = atoi(userInput);
@@ -196,9 +203,17 @@ void updateProduct(char fileName[STRING_LEN])
 	strcpy(userInput, getUserInput(userInput));
 	if (!validateDouble(userInput))
 	{
+		printf("Error: invalid input. Must be a positive and non-zero number.\n\n"); 
 		return;
 	}
 	newProduct.price = atof(userInput);
+
+	sequentialFile = fopen(fileName, "w"); 
+	if (sequentialFile == NULL) 
+	{
+		printf("fopen() failed.\n\n"); 
+		return;
+	}
 
 	for (int i = 0; i < counter; i++)
 	{
@@ -221,7 +236,7 @@ void updateProduct(char fileName[STRING_LEN])
 void deleteProduct(char fileName[STRING_LEN])
 {
 	char userInput[STRING_LEN] = "";
-	Product fileProducts[20] = { NULL };
+	Product fileProducts[ARRAY_SIZE] = { NULL }; 
 	int id = 0;
 	int counter = 0;
 	bool idExists = false;
@@ -237,6 +252,7 @@ void deleteProduct(char fileName[STRING_LEN])
 	strcpy(userInput, getUserInput(userInput));
 	if (!validateInt(userInput))
 	{
+		printf("Error: invalid input. Must be a non-zero and positive integer.\n\n"); 
 		return;
 	}
 	id = atoi(userInput);

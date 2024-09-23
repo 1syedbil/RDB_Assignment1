@@ -3,415 +3,529 @@
 
 //THIS IS WHERE THE DEFINITIONS FOR ALL OF THE FUNCTIONS RELATED TO RANDOM ACCESS WILL GO
 
-void rndAccessCreateRec(int id, int quant, double price, char name[STRING_LEN], char cat[STRING_LEN], char fileName[STRING_LEN])
+void rndAccessCreateRecord(char fileName[STRING_LEN])
 {
-	if (id == 0 || quant == 0 || price == 0 || strlen(name) == 0 || strlen(cat) == 0)
-	{
-		printf("Error: could not write new record to file. No attributes can have an empty value. All must be filled.\n\n");
-		return;
+    char userInput[STRING_LEN] = "";
+    RndAccessRecord rec = { 0, "", "", 0, 0 };
 
-	}
+    printf("Enter a ProductId for the new product: ");
+    strcpy(userInput, getUserInput(userInput));
+    if (!validateInt(userInput))
+    {
+        return;
+    }
+    rec.productId = atoi(userInput);
+    if (checkRecExists(fileName, rec.productId) != -1)
+    {
+        printf("A product with this ID already exists. No duplicate IDs allowed.\n\n");
+        return;
+    }
 
-	RndAccessRecord rec = { 0, "", "", 0, 0 };
+    printf("Enter a Name for the new product: ");
+    strcpy(rec.name, getUserInput(rec.name));
+    if (!validateString(rec.name))
+    {
+        return;
+    }
 
-	rec.productId = id;
-	rec.quantity = quant;
-	rec.price = price;
-	strcpy(rec.name, name);
-	strcpy(rec.category, cat);
+    printf("Enter a Category for the new product: ");
+    strcpy(rec.category, getUserInput(rec.category));
+    if (!validateString(rec.category))
+    {
+        return;
+    }
 
-	FILE* rndAccessFile = fopen(fileName, "ab");
-	if (rndAccessFile == NULL)
-	{
-		printf("There was an error in opening the file.\n\n");
-		return;
-	}
+    printf("Enter a Quantity for the new product: ");
+    strcpy(userInput, getUserInput(userInput));
+    if (!validateInt(userInput))
+    {
+        return;
+    }
+    rec.quantity = atoi(userInput);
 
-	if (fwrite(&rec, sizeof(RndAccessRecord), 1, rndAccessFile) < 1)
-	{
-		printf("There was an error writing to the file.\n\n");
-		return;
-	}
+    printf("Enter a Price for the new product: ");
+    strcpy(userInput, getUserInput(userInput));
+    if (!validateDouble(userInput))
+    {
+        return;
+    }
+    rec.price = atof(userInput);
 
-	if (fclose(rndAccessFile) != 0)
-	{
-		printf("There was an error while closing the file.\n\n");
-		return;
-	}
+    FILE* rndAccessFile = fopen(fileName, "ab");
+    if (rndAccessFile == NULL)
+    {
+        printf("There was an error in opening the file.\n\n");
+        return;
+    }
 
-	printf("New record (ID: %d) added to file.\n\n", id);
+    if (fwrite(&rec, sizeof(RndAccessRecord), 1, rndAccessFile) < 1)
+    {
+        printf("There was an error writing to the file.\n\n");
+        return;
+    }
+
+    if (fclose(rndAccessFile) != 0)
+    {
+        printf("There was an error while closing the file.\n\n");
+        return;
+    }
+
+    printf("New record (ID: %d) added to file.\n\n", rec.productId);
 }
 
-void rndAccessReadRec(char fileName[STRING_LEN], int id)
+void rndAccessReadRec(char fileName[STRING_LEN])
 {
-	RndAccessRecord saveRec = { 0, "", "", 0, 0 };
+    char userInput[STRING_LEN] = "";
+    int id = 0;
+    RndAccessRecord saveRec = { 0, "", "", 0, 0 };
 
-	FILE* rndAccessFile = fopen(fileName, "rb");
-	if (rndAccessFile == NULL)
-	{
-		printf("There was an error in opening the file.\n\n");
-		return;
-	}
+    printf("Enter the ID of the record you would like to read: ");
+    strcpy(userInput, getUserInput(userInput));
+    if (!validateInt(userInput))
+    {
+        return;
+    }
+    id = atoi(userInput);
+    if (checkRecExists(fileName, id) == -1)
+    {
+        printf("No such product corresponding with this ID exists.\n\n");
+        return;
+    }
 
-	if ((fseek(rndAccessFile, (calculateOffset(fileName, id)), SEEK_CUR)) != 0)
-	{
-		printf("The fseek() function failed.\n\n");
-		return;
-	}
+    FILE* rndAccessFile = fopen(fileName, "rb");
+    if (rndAccessFile == NULL)
+    {
+        printf("There was an error in opening the file.\n\n");
+        return;
+    }
 
-	if ((fread(&saveRec, sizeof(RndAccessRecord), 1, rndAccessFile)) == 0)
-	{
-		if (ferror(rndAccessFile) != 0)
-		{
-			printf("Error occurred in fread().\n\n");
-			return;
-		}
+    if ((fseek(rndAccessFile, (calculateOffset(fileName, id)), SEEK_CUR)) != 0)
+    {
+        printf("The fseek() function failed.\n\n");
+        return;
+    }
 
-		if (feof(rndAccessFile) != 0)
-		{
-			printf("End of file.\n\n");
-			return;
-		}
-	}
+    if ((fread(&saveRec, sizeof(RndAccessRecord), 1, rndAccessFile)) == 0)
+    {
+        if (ferror(rndAccessFile) != 0)
+        {
+            printf("Error occurred in fread().\n\n");
+            return;
+        }
 
-	printf("Here is record %d:\n\n|  ProductId : %d  |  Name : %s  |  Category : %s  |  Quantity : %d  |  Price : %.2f  |\n\n", saveRec.productId, saveRec.productId, saveRec.name, saveRec.category, saveRec.quantity, saveRec.price);
+        if (feof(rndAccessFile) != 0)
+        {
+            printf("End of file.\n\n");
+            return;
+        }
+    }
 
-	if (fclose(rndAccessFile) != 0)
-	{
-		printf("There was an error while closing the file.\n\n");
-		return;
-	}
+    printf("\n\n");
+    printf("| %-10s | %-20s | %-20s | %-10s | %-10s |\n", "ProductId", "Name", "Category", "Quantity", "Price");
+    printf("--------------------------------------------------------------------------------------\n");
+    printf("| %-10d | %-20s | %-20s | %-10d | %-10.2f |\n", saveRec.productId, saveRec.name, saveRec.category, saveRec.quantity, saveRec.price);
+    printf("\n\n");
+
+    if (fclose(rndAccessFile) != 0)
+    {
+        printf("There was an error while closing the file.\n\n");
+        return;
+    }
 }
 
-void rndAccessUpdtRec(char fileName[STRING_LEN], int id, int choice, char input[STRING_LEN])
+void rndAccessUpdtRec(char fileName[STRING_LEN])
 {
-	if (strlen(input) == 0)
-	{
-		printf("Error: could not update the record. No attributes can have an empty value.\n\n");
-		return;
-	}
+    char userInput[STRING_LEN] = "";
+    int choice = 0;
+    int id = 0;
+    RndAccessRecord saveRec = { 0, "", "", 0, 0 };
 
-	RndAccessRecord saveRec = { 0, "", "", 0, 0 };
+    printf("Enter the ID of the record you would like to update: ");
+    strcpy(userInput, getUserInput(userInput));
+    if (!validateInt(userInput))
+    {
+        return;
+    }
+    id = atoi(userInput);
+    if (checkRecExists(fileName, id) == -1)
+    {
+        printf("No such product corresponding with this ID exists.\n\n");
+        return;
+    }
 
-	FILE* rndAccessFile = fopen(fileName, "rb+");
-	if (rndAccessFile == NULL)
-	{
-		printf("There was an error in opening the file.\n\n");
-		return;
-	}
+    FILE* rndAccessFile = fopen(fileName, "rb+");
+    if (rndAccessFile == NULL)
+    {
+        printf("There was an error in opening the file.\n\n");
+        return;
+    }
 
-	if ((fseek(rndAccessFile, (calculateOffset(fileName, id)), SEEK_SET)) != 0)
-	{
-		printf("The fseek() function failed.\n\n");
-		return;
-	}
+    if ((fseek(rndAccessFile, (calculateOffset(fileName, id)), SEEK_SET)) != 0)
+    {
+        printf("The fseek() function failed.\n\n");
+        return;
+    }
 
-	if ((fread(&saveRec, sizeof(RndAccessRecord), 1, rndAccessFile)) == 0)
-	{
-		if (ferror(rndAccessFile) != 0)
-		{
-			printf("Error occurred in fread().\n\n");
-			return;
-		}
+    if ((fread(&saveRec, sizeof(RndAccessRecord), 1, rndAccessFile)) == 0)
+    {
+        if (ferror(rndAccessFile) != 0)
+        {
+            printf("Error occurred in fread().\n\n");
+            return;
+        }
 
-		if (feof(rndAccessFile) != 0)
-		{
-			printf("End of file.\n\n");
-			return;
-		}
-	}
+        if (feof(rndAccessFile) != 0)
+        {
+            printf("End of file.\n\n");
+            return;
+        }
+    }
 
-	if ((fseek(rndAccessFile, (calculateOffset(fileName, id)), SEEK_SET)) != 0)
-	{
-		printf("The fseek() function failed.\n\n");
-		return;
-	}
+    if ((fseek(rndAccessFile, (calculateOffset(fileName, id)), SEEK_SET)) != 0)
+    {
+        printf("The fseek() function failed.\n\n");
+        return;
+    }
 
-	switch (choice)
-	{
-	case 1:
-		strncpy(saveRec.name, input, STRING_LEN);
-		break;
+    do
+    {
+        printf("Update Menu:\n\n     1. Update Name     2. Update Category     3. Update Quantity     4. Update Price\n\n");
+        printf("Enter a number corresponding with your menu selection: ");
+        strcpy(userInput, getUserInput(userInput));
+        if (!validateInt(userInput))
+        {
+            continue;
+        }
+        printf("\n\n");
+        choice = atoi(userInput);
 
-	case 2:
-		strncpy(saveRec.category, input, STRING_LEN);
-		break;
+        switch (choice)
+        {
+        case 1:
+            printf("Enter a Name for the product: ");
+            strncpy(saveRec.name, getUserInput(saveRec.name), STRING_LEN - 1);
+            if (!validateString(saveRec.name))
+            {
+                return;
+            }
+            break;
 
-	case 3:
-		saveRec.quantity = validateQuant(input); 
-		break;
+        case 2:
+            printf("Enter a Category for the new product: ");
+            strncpy(saveRec.category, getUserInput(saveRec.category), STRING_LEN - 1);
+            if (!validateString(saveRec.category))
+            {
+                return;
+            }
+            break;
 
-	case 4:
-		saveRec.price = validatePrice(input); 
-		break;
-	}
+        case 3:
+            printf("Enter a Quantity for the new product: ");
+            strcpy(userInput, getUserInput(userInput));
+            if (!validateInt(userInput))
+            {
+                return;
+            }
+            saveRec.quantity = atoi(userInput);
+            break;
 
-	if (fwrite(&saveRec, sizeof(RndAccessRecord), 1, rndAccessFile) < 1)
-	{
-		printf("There was an error writing to the file.\n\n");
-		return;
-	}
+        case 4:
+            printf("Enter a Price for the new product: ");
+            strcpy(userInput, getUserInput(userInput));
+            if (!validateDouble(userInput))
+            {
+                return;
+            }
+            saveRec.price = atof(userInput);
+            break;
 
-	if (fclose(rndAccessFile) != 0)
-	{
-		printf("There was an error while closing the file.\n\n");
-		return;
-	}
+        default:
+            printf("Error: invalid menu selection.\n\n");
+            break;
+        }
+    } while (choice <= 0 || choice > 4);
 
-	if ((fread(&saveRec, sizeof(RndAccessRecord), 1, rndAccessFile)) == 0)
-	{
-		if (ferror(rndAccessFile) != 0)
-		{
-			printf("Error occurred in fread().\n\n");
-			return;
-		}
+    if (fwrite(&saveRec, sizeof(RndAccessRecord), 1, rndAccessFile) < 1)
+    {
+        printf("There was an error writing to the file.\n\n");
+        return;
+    }
 
-		if (feof(rndAccessFile) != 0)
-		{
-			printf("End of file.\n\n");
-			return;
-		}
-	}
+    if (fclose(rndAccessFile) != 0)
+    {
+        printf("There was an error while closing the file.\n\n");
+        return;
+    }
 
-	printf("Here is your updated record:\n\n");
-
-	rndAccessReadRec(fileName, id);
+    printf("Record %d has been updated.\n\n", id);
 }
 
-void rndAccessDltRec(char fileName[STRING_LEN], int id)
+void rndAccessDltRecord(char fileName[STRING_LEN])
 {
-	FILE* saveFile = fopen("../save.bin", "ab");
-	if (saveFile == NULL)
-	{
-		printf("There was an error in opening the file.\n\n");
-		return;
-	}
+    char userInput[STRING_LEN] = "";
+    int id = 0;
 
-	FILE* rndAccessFile = fopen(fileName, "rb+");
-	if (rndAccessFile == NULL)
-	{
-		printf("There was an error in opening the file.\n\n");
-		return;
-	}
+    printf("Enter the ID of the record you would like to delete: ");
+    strcpy(userInput, getUserInput(userInput));
+    if (!validateInt(userInput))
+    {
+        return;
+    }
+    id = atoi(userInput);
+    if (checkRecExists(fileName, id) == -1)
+    {
+        printf("No such product corresponding with this ID exists.\n\n");
+        return;
+    }
 
-	RndAccessRecord save[50] = { NULL };
-	int arraySize = 0;
+    FILE* saveFile = fopen("save.bin", "ab");
+    if (saveFile == NULL)
+    {
+        printf("There was an error in opening the file.\n\n");
+        return;
+    }
 
-	while (fread(&save[arraySize], sizeof(RndAccessRecord), 1, rndAccessFile))
-	{
-		if (ferror(rndAccessFile) != 0)
-		{
-			printf("Error occurred in fread().\n\n");
-			return;
-		}
+    FILE* rndAccessFile = fopen(fileName, "rb+");
+    if (rndAccessFile == NULL)
+    {
+        printf("There was an error in opening the file.\n\n");
+        return;
+    }
 
-		arraySize++;
-	}
+    RndAccessRecord save[50] = { NULL };
+    int arraySize = 0;
 
-	int index = 0;
+    while (fread(&save[arraySize], sizeof(RndAccessRecord), 1, rndAccessFile))
+    {
+        if (ferror(rndAccessFile) != 0)
+        {
+            printf("Error occurred in fread().\n\n");
+            return;
+        }
 
-	while (index <= (arraySize - 1))
-	{
-		if (save[index].productId != id)
-		{
-			if ((fseek(rndAccessFile, (calculateOffset(fileName, (save[index].productId))), SEEK_CUR)) != 0)
-			{
-				printf("The fseek() function failed.\n\n");
-				return;
-			}
+        arraySize++;
+    }
 
-			if ((fseek(saveFile, ftell(rndAccessFile), SEEK_CUR)) != 0)
-			{
-				printf("The fseek() function failed.\n\n");
-				return;
-			}
+    int index = 0;
 
-			if (fwrite(&save[index], sizeof(RndAccessRecord), 1, saveFile) < 1)
-			{
-				printf("There was an error while closing the file.\n\n");
-				return;
-			}
-			index++;
-		}
-		else if ((index + 1) <= (arraySize - 1))
-		{
-			if ((fseek(rndAccessFile, (calculateOffset(fileName, (save[index].productId))), SEEK_CUR)) != 0)
-			{
-				printf("The fseek() function failed.\n\n");
-				return;
-			}
+    while (index <= (arraySize - 1))
+    {
+        if (save[index].productId != id)
+        {
+            if ((fseek(rndAccessFile, (calculateOffset(fileName, (save[index].productId))), SEEK_CUR)) != 0)
+            {
+                printf("The fseek() function failed.\n\n");
+                return;
+            }
 
-			if ((fseek(saveFile, ftell(rndAccessFile), SEEK_CUR)) != 0)
-			{
-				printf("The fseek() function failed.\n\n");
-				return;
-			}
+            if ((fseek(saveFile, ftell(rndAccessFile), SEEK_CUR)) != 0)
+            {
+                printf("The fseek() function failed.\n\n");
+                return;
+            }
 
-			if (fwrite(&save[index + 1], sizeof(RndAccessRecord), 1, saveFile) < 1)
-			{
-				printf("There was an error while closing the file.\n\n");
-				return;
-			}
-			index += 2;
-		}
-		else if ((index + 1) > (arraySize - 1))
-		{
-			break;
-		}
-	}
+            if (fwrite(&save[index], sizeof(RndAccessRecord), 1, saveFile) < 1)
+            {
+                printf("There was an error while closing the file.\n\n");
+                return;
+            }
+            index++;
+        }
+        else if ((index + 1) <= (arraySize - 1))
+        {
+            if ((fseek(rndAccessFile, (calculateOffset(fileName, (save[index].productId))), SEEK_CUR)) != 0)
+            {
+                printf("The fseek() function failed.\n\n");
+                return;
+            }
 
-	if (fclose(rndAccessFile) != 0)
-	{
-		printf("There was an error while closing a file.\n\n");
-		return;
-	}
+            if ((fseek(saveFile, ftell(rndAccessFile), SEEK_CUR)) != 0)
+            {
+                printf("The fseek() function failed.\n\n");
+                return;
+            }
 
-	if (fclose(saveFile) != 0)
-	{
-		printf("There was an error while closing a file.\n\n");
-		return;
-	}
+            if (fwrite(&save[index + 1], sizeof(RndAccessRecord), 1, saveFile) < 1)
+            {
+                printf("There was an error while closing the file.\n\n");
+                return;
+            }
+            index += 2;
+        }
+        else if ((index + 1) > (arraySize - 1))
+        {
+            break;
+        }
+    }
 
-	if (remove("../inventory.bin") != 0)
-	{
-		printf("Unable to delete file.\n\n");
-		return;
-	}
+    if (fclose(rndAccessFile) != 0)
+    {
+        printf("There was an error while closing a file.\n\n");
+        return;
+    }
 
-	if (rename("../save.bin", fileName) != 0)
-	{
-		printf("Unable to rename file.\n\n");
-		return;
-	}
+    if (fclose(saveFile) != 0)
+    {
+        printf("There was an error while closing a file.\n\n");
+        return;
+    }
 
-	printf("Record %d has been deleted.\n\n", id);
-}
+    if (remove(fileName) != 0)
+    {
+        printf("Unable to delete file.\n\n");
+        return;
+    }
 
-long calculateOffset(char fileName[STRING_LEN], int id)
-{
-	int index = checkRecExists(fileName, id);
-	if (index == -1)
-	{
-		return index;
-	}
+    if (rename("save.bin", fileName) != 0)
+    {
+        printf("Unable to rename file.\n\n");
+        return;
+    }
 
-	long offset = (sizeof(RndAccessRecord)) * (index);
-
-	return offset;
-}
-
-void displayAllRecs(char fileName[STRING_LEN])
-{
-	FILE* rndAccessFile = fopen(fileName, "rb");
-	if (rndAccessFile == NULL)
-	{
-		printf("There was an error in opening the file.\n\n");
-		return;
-	}
-
-	RndAccessRecord a = { 0, "", "", 0, 0 };
-
-	printf("Here are all the records in the file currently:\n\n");
-
-	while (fread(&a, sizeof(RndAccessRecord), 1, rndAccessFile))
-	{
-		if (ferror(rndAccessFile) != 0)
-		{
-			printf("Error occurred in fread().\n");
-			return;
-		}
-
-		printf("|  ProductId : %d  |  Name : %s  |  Category : %s  |  Quantity : %d  |  Price : %.2f  |\n\n", a.productId, a.name, a.category, a.quantity, a.price);
-	}
-
-	if (feof(rndAccessFile) != 0)
-	{
-		printf("\nEnd of file reached. All records have been printed.\n\n");
-	}
-
-	if (fclose(rndAccessFile) != 0)
-	{
-		printf("There was an error while closing the file.\n\n");
-	}
-}
-
-int checkRecExists(char fileName[STRING_LEN], int id)
-{
-	RndAccessRecord a[50] = { NULL };
-	int arraySize = 0;
-	int index = 0;
-
-	FILE* rndAccessFile = fopen(fileName, "rb");
-	if (rndAccessFile == NULL)
-	{
-		printf("The file is empty or has not been created yet.\n\n");
-		return -1;
-	}
-
-	while (fread(&a[arraySize], sizeof(RndAccessRecord), 1, rndAccessFile))
-	{
-		if (ferror(rndAccessFile) != 0)
-		{
-			printf("Error occurred in fread().\n\n");
-			return;
-		}
-
-		arraySize++;
-	}
-
-	if (fclose(rndAccessFile) != 0)
-	{
-		printf("There was an error while closing the file.\n\n");
-		return -1;
-	}
-
-	while (index <= (arraySize - 1))
-	{
-		if (a[index].productId == id)
-		{
-			return index;
-		}
-
-		index++;
-	}
-
-	return -1;
+    printf("Record %d has been deleted.\n\n", id);
 }
 
 char* getUserInput(char input[STRING_LEN])
 {
-	if (fgets(input, STRING_LEN, stdin) == NULL)
-	{
-		printf("There was an error with the fgets() function.\n\n");
-		return NULL;
-	}
+    if (fgets(input, STRING_LEN, stdin) == NULL)
+    {
+        printf("There was an error with the fgets() function.\n\n");
+        return NULL;
+    }
 
-	if (input[strlen(input) - 1] == '\n')
-	{
-		input[strlen(input) - 1] = '\0';
-	}
+    if (input[strlen(input) - 1] == '\n')
+    {
+        input[strlen(input) - 1] = '\0';
+    }
 
-	return input;
+    return input;
 }
 
-int validateQuant(char input[STRING_LEN])
+long calculateOffset(char fileName[STRING_LEN], int id)
 {
-	if (atoi(input) != atof(input) || atoi(input) <= 0)
-	{
-		printf("Error: invalid input. Quantity value must be a positive and non-zero integer.\n\n");
-		return -1;
-	}
+    int index = checkRecExists(fileName, id);
+    if (index == -1)
+    {
+        return index;
+    }
 
-	return atoi(input);
+    long offset = (sizeof(RndAccessRecord)) * (index);
+
+    return offset;
 }
 
-double validatePrice(char input[STRING_LEN])
+int checkRecExists(char fileName[STRING_LEN], int id)
 {
-	if (atof(input) <= 0)
-	{
-		printf("Error: invalid input. Price value must be a positive and non-zero number.\n\n");
-		return -1;
-	}
+    RndAccessRecord a[50] = { NULL };
+    int arraySize = 0;
+    int index = 0;
 
-	return atof(input);
+    FILE* rndAccessFile = fopen(fileName, "ab+");
+    if (rndAccessFile == NULL)
+    {
+        printf("fopen() failed.\n\n");
+        return -1;
+    }
+
+    while (fread(&a[arraySize], sizeof(RndAccessRecord), 1, rndAccessFile))
+    {
+        if (ferror(rndAccessFile) != 0)
+        {
+            printf("Error occurred in fread().\n\n");
+            return -1;
+        }
+        arraySize++;
+    }
+
+    if (fclose(rndAccessFile) != 0)
+    {
+        printf("fclose() failed.\n\n");
+        return -2;
+    }
+
+    while (index <= (arraySize - 1))
+    {
+        if (a[index].productId == id)
+        {
+            return index;
+        }
+        index++;
+    }
+
+    return -1;
+}
+
+bool validateString(char input[STRING_LEN])
+{
+    if (strlen(input) == 0)
+    {
+        printf("Error: invalid input. Cannot be empty.\n\n");
+        return false;
+    }
+
+    if (strlen(input) >= (STRING_LEN - 1))
+    {
+        printf("Error: input is too many characters long.\n\n");
+        if (input[strlen(input) - 1] == '\n')
+        {
+            input[strlen(input) - 1] = '\0';
+        }
+        return false;
+    }
+
+    return true;
+}
+
+bool validateInt(char input[STRING_LEN])
+{
+    if (strlen(input) == 0)
+    {
+        printf("Error: invalid input. Cannot be empty.\n\n");
+        return false;
+    }
+
+    if (strlen(input) >= (STRING_LEN - 1))
+    {
+        printf("Error: input is too many characters long.\n\n");
+        if (input[strlen(input) - 1] == '\n')
+        {
+            input[strlen(input) - 1] = '\0';
+        }
+        return false;
+    }
+
+    if (atoi(input) != atof(input) || atof(input) <= 0)
+    {
+        printf("Error: invalid input. Must be a non-zero and positive integer.\n\n");
+        return false;
+    }
+
+    return true;
+}
+
+bool validateDouble(char input[STRING_LEN])
+{
+    if (strlen(input) == 0)
+    {
+        printf("Error: invalid input. Cannot be empty.\n\n");
+        return false;
+    }
+
+    if (strlen(input) >= (STRING_LEN - 1))
+    {
+        printf("Error: input is too many characters long.\n\n");
+        if (input[strlen(input) - 1] == '\n')
+        {
+            input[strlen(input) - 1] = '\0';
+        }
+        return false;
+    }
+
+    if (atof(input) <= 0)
+    {
+        printf("Error: invalid input. Must be a positive and non-zero number.\n\n");
+        return false;
+    }
+
+    return true;
 }

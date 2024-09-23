@@ -18,7 +18,8 @@
 //STRUCT DEFINITIONS
 
 //for random access
-typedef struct {
+typedef struct 
+{
     int productId;
     char name[STRING_LEN];
     char category[STRING_LEN];
@@ -27,47 +28,37 @@ typedef struct {
 } RndAccessRecord;
 
 //for sequential access
-struct Product {
+typedef struct
+{
 	int id;
 	char name[STRING_LEN];
-	char category[STRING_LEN]; 
+	char category[STRING_LEN];
 	int quantity;
-	float price;
+	double price;
 }Product;
 
+bool validateString(char input[STRING_LEN]);
+bool validateInt(char input[STRING_LEN]);
+bool validateDouble(char input[STRING_LEN]);
+char* getUserInput(char input[STRING_LEN]); 
 
 //THIS FILE IS WHERE ALL OF THE FUNCTION PROTOTYPES WILL GO 
 
 //Random Access
 
-void rndAccessCreateRec(int id, int quant, double price, char name[STRING_LEN], char cat[STRING_LEN], char fileName[STRING_LEN]);
-
-void rndAccessReadRec(char fileName[STRING_LEN], int id);
-
-void rndAccessUpdtRec(char fileName[STRING_LEN], int id, int choice, char input[STRING_LEN]);
-
-void rndAccessDltRec(char fileName[STRING_LEN], int id);
-
-long calculateOffset(char fileName[STRING_LEN], int id);
-
-void displayAllRecs(char fileName[STRING_LEN]);
-
+void rndAccessCreateRecord(char fileName[STRING_LEN]);
+void rndAccessReadRec(char fileName[STRING_LEN]);
+void rndAccessUpdtRec(char fileName[STRING_LEN]);
+void rndAccessDltRecord(char fileName[STRING_LEN]);
 int checkRecExists(char fileName[STRING_LEN], int id);
-
-char* getUserInput(char input[STRING_LEN]);
-
-int validateQuant(char input[STRING_LEN]);
-
-double validatePrice(char input[STRING_LEN]);
+long calculateOffset(char fileName[STRING_LEN], int id); 
 
 //Sequential Access
 
-int readProducts(struct Product products[]);
-void writeProducts(struct Product products[], int times);
-void addProduct(struct Product products[], int* times);
-void updateProduct(struct Product products[], int times);
-void deleteProduct(struct Product products[], int* times);
-void displayProducts(struct Product products[], int times);
+void addProduct(char fileName[STRING_LEN]);
+void displayProducts(char fileName[STRING_LEN]);
+void updateProduct(char fileName[STRING_LEN]);
+void deleteProduct(char fileName[STRING_LEN]);
 
 //Delimited File
 /*

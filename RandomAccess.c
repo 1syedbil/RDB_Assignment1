@@ -466,10 +466,6 @@ bool validateString(char input[STRING_LEN])
     if (strlen(input) >= (STRING_LEN - 1))
     {
         printf("Error: input is too many characters long.\n\n");
-        if (input[strlen(input) - 1] == '\n')
-        {
-            input[strlen(input) - 1] = '\0';
-        }
         return false;
     }
 
@@ -487,10 +483,6 @@ bool validateInt(char input[STRING_LEN])
     if (strlen(input) >= (STRING_LEN - 1))
     {
         printf("Error: input is too many characters long.\n\n");
-        if (input[strlen(input) - 1] == '\n')
-        {
-            input[strlen(input) - 1] = '\0';
-        }
         return false;
     }
 
@@ -514,10 +506,6 @@ bool validateDouble(char input[STRING_LEN])
     if (strlen(input) >= (STRING_LEN - 1))
     {
         printf("Error: input is too many characters long.\n\n");
-        if (input[strlen(input) - 1] == '\n')
-        {
-            input[strlen(input) - 1] = '\0';
-        }
         return false;
     }
 

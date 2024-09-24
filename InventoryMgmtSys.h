@@ -25,7 +25,6 @@
 #define STRING_LEN 50
 #define ARRAY_SIZE 50
 
-
 //STRUCT DEFINITIONS
 
 //for random access
@@ -71,19 +70,17 @@ void updateProduct(char fileName[STRING_LEN]);
 void deleteProduct(char fileName[STRING_LEN]);
 
 //Delimited File
-/*
-- function to create an entry
-
-- function to read out entries
-
-- functiom to update an entry
-
-- function to delete entries
-
-- any other functions necessary...
-*/
+FILE* CSVFileStarter();
+void CSVWriteToFile(FILE* delimFile);
+void CSVReadFile(FILE* delimFile);
+char* CSVInputValidation(FILE* openFile);
+void CSVFileDeleteLine(FILE* delimFile);
+void CSVFileUpdate(FILE* delimFile);
+void CSVFileSeek(FILE* opened, char* ID);
 
 
 #endif
+
+
 
 

@@ -15,7 +15,7 @@
 *                 this nested loop where the user can now choose which CRUD operations to
 *                 perform via the file access method they chose from the previous menu. 
 *                 the CRUD operations menu uses a smilar switch-case statement as the 
-*                 previous menu. 
+*                 previous menu. All of the code in this file was written by Bilal Syed.
 */
 
 #include "InventoryMgmtSys.h"
@@ -47,7 +47,7 @@ int main(void)
 			do
 			{
 
-				printf("Sequential Access Menu:\n\n     1. Create a Record     2. Read All Records     3. Update a Record     4. Delete a Record     5. Back\n\n"); 
+				printf("Sequential Access (By: Quang Minh Vu & Bilal Syed):\n\n     1. Create a Record     2. Read All Records     3. Update a Record     4. Delete a Record     5. Back\n\n"); 
 				printf("Enter a number corresponding with your menu selection: "); 
 				strcpy(userInput, getUserInput(userInput)); 
 				printf("\n\n");
@@ -92,7 +92,7 @@ int main(void)
 		case 2:
 			do
 			{
-				printf("Random Access Menu:\n\n     1. Create a Record     2. Read a Record     3. Update a Record     4. Delete a Record     5. Back\n\n");
+				printf("Random Access (By: Bilal Syed):\n\n     1. Create a Record     2. Read a Record     3. Update a Record     4. Delete a Record     5. Back\n\n");
 				printf("Enter a number corresponding with your menu selection: ");
 				strcpy(userInput, getUserInput(userInput));
 				printf("\n\n");
@@ -138,7 +138,10 @@ int main(void)
 			do
 			{
 
-				printf("Delimited File Menu:\n\n     1. Create a Record     2. Read All Records     3. Update a Record     4. Delete a Record     5. Back\n\n");
+				FILE* CSVfile = NULL;
+				CSVfile = CSVFileStarter();
+
+				printf("Delimited File (By: Morgan Tabor):\n\n     1. Create a Record     2. Read All Records     3. Update a Record     4. Delete a Record     5. Back\n\n");
 				printf("Enter a number corresponding with your menu selection: ");
 				strcpy(userInput, getUserInput(userInput));
 				printf("\n\n");  
@@ -152,19 +155,19 @@ int main(void)
 				switch (choice2)
 				{
 				case 1:
-
+					CSVWriteToFile(CSVfile); 
 					break;
 
 				case 2:
-
+					CSVReadFile(CSVfile);  
 					break;
 
 				case 3:
-
+					printf("This section was not fully completed.\n\n");
 					break;
 
 				case 4:
-
+					printf("This section was not fully completed.\n\n"); 
 					break;
 
 				case 5:

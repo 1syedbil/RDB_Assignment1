@@ -1,3 +1,23 @@
+/*
+* FILE          : InventoryMgmtSys.c
+* PROJECT       : Relational Databases Assignment 1
+* PROGRAMMERS   : Bilal Syed, Morgan Tabor, Quang Minh Vu
+* FIRST VERSION : 2024-09-13
+* DESCRIPTION   : This file acts as the main entry point for our inventory management
+*                 system program. It performs in a loop so that the user has the choice
+*                 to keep performing actions or to leave if they would like to. It 
+*                 starts off by showing a menu to the user for which kind of file access
+*                 method they would like to use and then prompting them to input their 
+*                 choice. After they make a choice the program enters a switch-case.
+*                 statement. Case 1 is sequential, case 2 is random, and case 3 is delim.
+*                 There is a secondary menu for all of the file access options that once 
+*                 again loops within the file access option's respective case. It is in
+*                 this nested loop where the user can now choose which CRUD operations to
+*                 perform via the file access method they chose from the previous menu. 
+*                 the CRUD operations menu uses a smilar switch-case statement as the 
+*                 previous menu. All of the code in this file was written by Bilal Syed.
+*/
+
 #include "InventoryMgmtSys.h"
 
 int main(void)
@@ -16,6 +36,7 @@ int main(void)
 		printf("\n\n");   
 		if (!validateInt(userInput))
 		{
+			printf("Error: invalid input. Must be a non-zero and positive integer.\n\n");
 			continue;
 		}
 		choice1 = atoi(userInput);  
@@ -26,12 +47,13 @@ int main(void)
 			do
 			{
 
-				printf("Sequential Access Menu:\n\n     1. Create a Record     2. Read All Records     3. Update a Record     4. Delete a Record     5. Back\n\n"); 
+				printf("Sequential Access (By: Quang Minh Vu & Bilal Syed):\n\n     1. Create a Record     2. Read All Records     3. Update a Record     4. Delete a Record     5. Back\n\n"); 
 				printf("Enter a number corresponding with your menu selection: "); 
 				strcpy(userInput, getUserInput(userInput)); 
 				printf("\n\n");
 				if (!validateInt(userInput))
 				{
+					printf("Error: invalid input. Must be a non-zero and positive integer.\n\n");
 					continue;
 				}
 				choice2 = atoi(userInput); 
@@ -70,12 +92,13 @@ int main(void)
 		case 2:
 			do
 			{
-				printf("Random Access Menu:\n\n     1. Create a Record     2. Read a Record     3. Update a Record     4. Delete a Record     5. Back\n\n");
+				printf("Random Access (By: Bilal Syed):\n\n     1. Create a Record     2. Read a Record     3. Update a Record     4. Delete a Record     5. Back\n\n");
 				printf("Enter a number corresponding with your menu selection: ");
 				strcpy(userInput, getUserInput(userInput));
 				printf("\n\n");
 				if (!validateInt(userInput))
 				{
+					printf("Error: invalid input. Must be a non-zero and positive integer.\n\n"); 
 					continue;
 				}
 				choice2 = atoi(userInput);
@@ -115,28 +138,36 @@ int main(void)
 			do
 			{
 
-				printf("Delimited File Menu:\n\n     1. Create a Record     2. Read All Records     3. Update a Record     4. Delete a Record     5. Back\n\n");
+				FILE* CSVfile = NULL;
+				CSVfile = CSVFileStarter();
+
+				printf("Delimited File (By: Morgan Tabor):\n\n     1. Create a Record     2. Read All Records     3. Update a Record     4. Delete a Record     5. Back\n\n");
 				printf("Enter a number corresponding with your menu selection: ");
 				strcpy(userInput, getUserInput(userInput));
 				printf("\n\n");  
+				if (!validateInt(userInput))
+				{
+					printf("Error: invalid input. Must be a non-zero and positive integer.\n\n");
+					continue;
+				}
 				choice2 = atoi(userInput); 
 
 				switch (choice2)
 				{
 				case 1:
-
+					CSVWriteToFile(CSVfile); 
 					break;
 
 				case 2:
-
+					CSVReadFile(CSVfile);  
 					break;
 
 				case 3:
-
+					printf("This section was not fully completed.\n\n");
 					break;
 
 				case 4:
-
+					printf("This section was not fully completed.\n\n"); 
 					break;
 
 				case 5:
